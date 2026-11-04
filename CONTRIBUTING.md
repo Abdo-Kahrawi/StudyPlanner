@@ -2,8 +2,8 @@
 
 | Role | Name | Branch prefix |
 | --- | --- | --- |
-| Person A (data, nn, search) | TODO | `a/` |
-| Person B (csp, integration, eval, demo) | TODO | `b/` |
+| Abdo (data, nn, search) | TODO | `a/` |
+| Zeyad (csp, integration, eval, demo) | TODO | `b/` |
 
 ## Rules
 
