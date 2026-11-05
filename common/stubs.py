@@ -35,3 +35,42 @@ def capacity_schedule(plan: Plan, profile: StudentProfile, **_ignored) -> Schedu
             free.remove(usable[0])
             timetable[(a.id, k)] = usable[0]
     return ScheduleResult(ok=True, timetable=timetable)
+
+
+class HistoryFakePredictor(FakePredictor):
+    """FakePredictor whose base mark is the student's previous mean minus 15 (default 40)."""
+
+    name = "fake-history"
+
+    def predict(self, profile: StudentProfile, plan: Plan) -> np.ndarray:
+        self.base = profile.history.get("prev_score_mean", 55.0) - 15.0
+        return super().predict(profile, plan)
+
+
+def reference_search(profile, predictor, strategy, is_schedulable, max_sessions):
+    """Brute-force stand-in for search.search: tries plans in order of total sessions.
+
+    Same signature and SearchResult as the real search, so integration/ can be built and
+    tested before Person A's UCS/Greedy/A* land. Ignores `strategy`. Not for experiments.
+    """
+    from itertools import product
+
+    from common.types import SearchResult
+
+    n = len(profile.assignments)
+    plans = sorted(product(range(max_sessions + 1), repeat=n), key=lambda p: (sum(p), p))
+    best, best_marks, best_key = None, None, None
+    trace, expanded = [], 0
+    for plan in plans:
+        expanded += 1
+        marks = predictor.predict(profile, plan)
+        key = float(np.min(marks - profile.target))
+        meets = bool(np.all(marks >= profile.target))
+        trace.append({"step": expanded, "plan": plan, "cost": sum(plan), "min_margin": key})
+        if (best_key is None or key > best_key) and is_schedulable(plan):
+            best, best_marks, best_key = plan, marks, key
+        if meets and is_schedulable(plan):
+            return SearchResult("found", plan, sum(plan), marks, plan, marks,
+                                nodes_expanded=expanded, nodes_generated=expanded, trace=trace)
+    return SearchResult("unreachable", None, None, None, best, best_marks,
+                        nodes_expanded=expanded, nodes_generated=expanded, trace=trace)
