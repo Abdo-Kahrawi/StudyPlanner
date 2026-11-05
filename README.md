@@ -58,6 +58,8 @@ Person A = prediction side, Person B = scheduling side. Fill in names in `CONTRI
   `eval/harness.py`, Experiment 2, `run_demo.py`, CSP / profile / planner tests.
 - In progress (Person A): `data/make_data.py`, `nn/`, `search/`, Experiments 1 and 3.
 
+Report draft for the scheduling side: [`docs/report_partB.md`](docs/report_partB.md).
+
 Until Person A's modules land, the planner, demo and Experiment 2 fall back to the stubs in
 `common/stubs.py` (a fake monotone predictor and a brute-force search) and print a note saying so.
 Results produced with stubs are for development only.
