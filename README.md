@@ -54,5 +54,20 @@ Person A = prediction side, Person B = scheduling side. Fill in names in `CONTRI
 
 ## Status
 
-Skeleton only. Functions raise `NotImplementedError` with the owner and target week.
-`common/stubs.py` provides a fake predictor and a simple scheduler so both sides can build in parallel.
+- Done (Person B, `branch_zeyad`): `csp/` (BT, FC, AC-3, MAC), `data/profiles.py`, `integration/`,
+  `eval/harness.py`, Experiment 2, `run_demo.py`, CSP / profile / planner tests.
+- In progress (Person A): `data/make_data.py`, `nn/`, `search/`, Experiments 1 and 3.
+
+Until Person A's modules land, the planner, demo and Experiment 2 fall back to the stubs in
+`common/stubs.py` (a fake monotone predictor and a brute-force search) and print a note saying so.
+Results produced with stubs are for development only.
+
+Demo scenarios:
+
+```bash
+python run_demo.py                          # worked example from the brief
+python run_demo.py --profile tight          # NN says "enough", CSP rejects the schedule
+python run_demo.py --profile impossible     # clear "no solution" with best predicted marks
+python run_demo.py --compare-predictors     # NN on vs off
+python run_demo.py --csp bt --trace         # backtracking only, print the search trace
+```
