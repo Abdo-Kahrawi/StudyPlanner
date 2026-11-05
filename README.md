@@ -32,6 +32,7 @@ python run_demo.py                 # integrated demo with plots
 python -m eval.exp1_search         # Experiment 1: UCS vs Greedy vs A*
 python -m eval.exp2_csp            # Experiment 2: BT vs BT+FC vs BT+FC+AC-3
 python -m eval.exp3_nn_vs_avg      # Experiment 3: NN vs average predictor
+python -m eval.run_profiles         # planner output for 30 student profiles (CSV)
 pytest -q                          # tests
 ```
 
