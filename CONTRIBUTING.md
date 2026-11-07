@@ -2,8 +2,8 @@
 
 | Role | Name | Branch prefix |
 | --- | --- | --- |
-| Abdo (data, nn, search) | TODO | `a/` |
-| Zeyad (csp, integration, eval, demo) | TODO | `b/` |
+| Abdo (data, nn, search) | Abdelrahman Farghaly | `a/` |
+| Zeyad (csp, integration, eval, demo) | Zeyad Salem | `b/` |
 
 ## Rules
 
