@@ -51,13 +51,18 @@ pytest -q                          # tests
 | `tests/` | each owner | Unit tests + 5 normal / 3 edge / 2 impossible planner cases |
 | `run_demo.py` | B | Integrated demo |
 
-Person A = prediction side, Person B = scheduling side. Fill in names in `CONTRIBUTING.md`.
+## Team
+
+- **Person A (person 1): Abdo Kahrawi**, prediction side: data, `nn/`, `search/`, Experiments 1 and 3.
+- **Person B (person 2): Zeyad Salem**, scheduling side: `csp/`, `integration/`, eval harness, Experiment 2, `run_demo.py`.
+
+In the Owner column above, A means Abdo and B means Zeyad.
 
 ## Status
 
-- Done (Person B, `branch_zeyad`): `csp/` (BT, FC, AC-3, MAC), `data/profiles.py`, `integration/`,
+- Done (Person B, Zeyad, `branch_zeyad`): `csp/` (BT, FC, AC-3, MAC), `data/profiles.py`, `integration/`,
   `eval/harness.py`, Experiment 2, `run_demo.py`, CSP / profile / planner tests.
-- In progress (Person A): `data/make_data.py`, `nn/`, `search/`, Experiments 1 and 3.
+- In progress (Person A, Abdo): `data/make_data.py`, `nn/`, `search/`, Experiments 1 and 3.
 
 Report draft for the scheduling side: [`docs/report_partB.md`](docs/report_partB.md).
 
