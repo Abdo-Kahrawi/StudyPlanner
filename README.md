@@ -50,7 +50,12 @@ pytest -q                          # tests
 | `tests/` | each owner | Unit tests + 5 normal / 3 edge / 2 impossible planner cases |
 | `run_demo.py` | B | Integrated demo |
 
-Person A = prediction side, Person B = scheduling side. Fill in names in `CONTRIBUTING.md`.
+## Team
+
+- **Person A (person 1): Abdo Kahrawi**, prediction side: data, `nn/`, `search/`, Experiments 1 and 3.
+- **Person B (person 2): Zeyad Salem**, scheduling side: `csp/`, `integration/`, eval harness, Experiment 2, `run_demo.py`.
+
+In the Owner column above, A means Abdo and B means Zeyad.
 
 ## Status
 
