@@ -10,10 +10,10 @@ PROCESSED_DIR = ROOT / "data" / "processed"
 RESULTS_DIR = ROOT / "results"
 WEIGHTS_DIR = ROOT / "nn" / "weights"
 
-# Chosen in Week 1 after exploring OULAD (Person A). Placeholder until then.
-COURSE = "TODO"
-TRAIN_PRESENTATIONS: list[str] = []   # earlier presentations, e.g. ["2013J", "2014B"]
-TEST_PRESENTATION = "TODO"            # later presentation, e.g. "2014J"
+# Chosen by Person A after exploring OULAD (data/make_data.py make_dataset defaults).
+COURSE = "BBB"
+TRAIN_PRESENTATIONS: list[str] = ["2013B", "2013J", "2014B"]
+TEST_PRESENTATION = "2014J"
 
 # Planner limits
 MAX_SESSIONS_PER_ASSIGNMENT = 10

@@ -25,15 +25,22 @@ pip install -r requirements.txt
 
 ## Run
 
+Put the OULAD CSVs in `data/raw/` (or let step 1 download them), then from the repo root:
+
 ```bash
-python -m data.make_data           # download + preprocess OULAD (fixed seed)
-python -m nn.train --seed 42       # train the NN, compare with the average baseline
-python run_demo.py                 # integrated demo with plots
-python -m eval.exp1_search         # Experiment 1: UCS vs Greedy vs A*
-python -m eval.exp2_csp            # Experiment 2: BT vs BT+FC vs BT+FC+AC-3
-python -m eval.exp3_nn_vs_avg      # Experiment 3: NN vs average predictor
-pytest -q                          # tests
+python -m data.make_data                  # 1. raw OULAD -> data/processed/{train,test}_data.csv (seed 42)
+python -m nn.train --seed 42              # 2. train the NN, compare with the average baseline -> nn/weights/
+python -m eval.monotonicity --real        # 3. monotonicity check and violation report
+python run_demo.py                        # 4. integrated demo with plots (see docs/demo_script.md)
+python -m eval.run_profiles --real        # 5. planner output for 30 OULAD profiles
+python -m eval.exp1_search                # 6. Experiment 1: UCS vs Greedy vs A*
+python -m eval.exp2_csp --real            # 7. Experiment 2: BT vs BT+FC vs BT+FC+AC-3
+python -m eval.exp3_nn_vs_avg             # 8. Experiment 3: NN vs average predictor
+pytest -q                                 # tests
 ```
+
+Results (CSV tables and PNG plots) go to `results/`. Without trained weights, the demo and
+experiments fall back to the stub predictor and print a note saying so.
 
 ## Layout and owners
 
@@ -59,5 +66,6 @@ In the Owner column above, A means Abdo and B means Zeyad.
 
 ## Status
 
-Skeleton only. Functions raise `NotImplementedError` with the owner and target week.
-`common/stubs.py` provides a fake predictor and a simple scheduler so both sides can build in parallel.
+All modules are implemented. Run `python -m data.make_data` then `python -m nn.train` before the
+demo and experiments: until trained weights exist in `nn/weights/`, the planner falls back to the
+stub predictor in `common/stubs.py` and says so.
