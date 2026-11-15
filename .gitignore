@@ -5,7 +5,9 @@ venv/
 .pytest_cache/
 # Raw and processed data are rebuilt by data/make_data.py
 data/raw/
+data/interim/
 data/processed/
 results/*.csv
 results/*.png
+results/*/
 !results/.gitkeep

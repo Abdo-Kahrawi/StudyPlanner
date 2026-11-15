@@ -35,6 +35,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from common import config
+
 # Only public APIs
 try:
     from search import StudyPlannerProblem, uniform_cost_search, greedy_search, astar_search
@@ -169,13 +171,13 @@ def run_experiment(train_csv="train_data.csv", n_students=30, n_seeds=5, target=
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--train_csv", default="train_data.csv")
+    ap.add_argument("--train_csv", default=str(config.PROCESSED_DIR / "train_data.csv"))
     ap.add_argument("--n_students", type=int, default=30)
     ap.add_argument("--n_seeds", type=int, default=5)
     ap.add_argument("--target", type=float, default=55.0)
-    ap.add_argument("--out_dir", default="eval/results/exp1")
-    ap.add_argument("--weights", default="nn_weights.pt")
-    ap.add_argument("--scaler", default="scaler.npz")
+    ap.add_argument("--out_dir", default=str(config.RESULTS_DIR / "exp1"))
+    ap.add_argument("--weights", default=str(config.WEIGHTS_DIR / "nn_weights.pt"))
+    ap.add_argument("--scaler", default=str(config.WEIGHTS_DIR / "scaler.npz"))
     ap.add_argument("--max_per", type=int, default=10)
     ap.add_argument("--max_total", type=int, default=30)
     args = ap.parse_args()

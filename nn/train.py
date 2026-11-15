@@ -3,9 +3,10 @@ train.py - Trains StudyScoreNet with MSE/RMSE, Adam, and compares to average bas
 Sanity-check required by spec: NN must beat simple average baseline.
 
 Usage:
+  python -m nn.train --seed 42          # reads data/processed/{train,test}_data.csv
   python -m nn.train --train_csv train_data.csv --test_csv test_data.csv --epochs 50 --batch 256
 
-Outputs:
+Outputs (default folder nn/weights/, which nn.predictor loads from):
   nn_weights.pt, scaler.npz, train_log.json, baseline_comparison.txt
 """
 import argparse, json, os
@@ -17,8 +18,17 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+from common import config
 from .model import get_model, INPUT_DIM, count_params
 from .effort import FEATURE_ORDER
+
+
+def set_seed(seed: int) -> None:
+    """Same seed -> same split, initial weights and batch order."""
+    import random
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
 def load_data(train_csv, test_csv=None):
     train_df = pd.read_csv(train_csv)
@@ -60,13 +70,14 @@ def baseline_predict(train_df, test_df=None, mode="cumulative_avg"):
     return train_mean, predict_row
 
 def train_loop(args):
+    set_seed(args.seed)
     X_full, y_full, X_test, y_test, train_df, test_df = load_data(args.train_csv, args.test_csv)
 
     # train/val split from full if no external test, else val from train
     if X_test is None:
-        X_train, X_val, y_train, y_val = train_test_split(X_full, y_full, test_size=0.2, random_state=42)
+        X_train, X_val, y_train, y_val = train_test_split(X_full, y_full, test_size=0.2, random_state=args.seed)
     else:
-        X_train, X_val, y_train, y_val = train_test_split(X_full, y_full, test_size=0.15, random_state=42)
+        X_train, X_val, y_train, y_val = train_test_split(X_full, y_full, test_size=0.15, random_state=args.seed)
 
     scaler = StandardScaler()
     X_train_s = scaler.fit_transform(X_train)
@@ -77,7 +88,8 @@ def train_loop(args):
     # torch datasets
     train_ds = TensorDataset(torch.from_numpy(X_train_s), torch.from_numpy(y_train))
     val_ds = TensorDataset(torch.from_numpy(X_val_s), torch.from_numpy(y_val))
-    train_loader = DataLoader(train_ds, batch_size=args.batch, shuffle=True)
+    train_loader = DataLoader(train_ds, batch_size=args.batch, shuffle=True,
+                              generator=torch.Generator().manual_seed(args.seed))
     val_loader = DataLoader(val_ds, batch_size=args.batch)
 
     model = get_model(input_dim=INPUT_DIM, hidden1=args.h1, hidden2=args.h2, dropout=args.dropout)
@@ -184,7 +196,8 @@ def train_loop(args):
     print(f"\nNN worth it? {'YES - beats mean baseline' if is_worth else 'NO - check features/training'}")
 
     # save
-    os.makedirs(os.path.dirname(args.save_path) if os.path.dirname(args.save_path) else ".", exist_ok=True)
+    for path in (args.save_path, args.scaler_path, args.log_path, args.comparison_path):
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     torch.save(model.state_dict(), args.save_path)
     np.savez(args.scaler_path, mean=scaler.mean_, scale=scaler.scale_, feature_order=np.array(FEATURE_ORDER))
     with open(args.log_path,"w") as f:
@@ -204,8 +217,9 @@ def train_loop(args):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--train_csv", default="/mnt/data/train_data.csv")
-    ap.add_argument("--test_csv", default="/mnt/data/test_data.csv")
+    ap.add_argument("--train_csv", default=str(config.PROCESSED_DIR / "train_data.csv"))
+    ap.add_argument("--test_csv", default=str(config.PROCESSED_DIR / "test_data.csv"))
+    ap.add_argument("--seed", type=int, default=config.SEED)
     ap.add_argument("--epochs", type=int, default=60)
     ap.add_argument("--batch", type=int, default=256)
     ap.add_argument("--lr", type=float, default=1e-3)
@@ -213,9 +227,9 @@ if __name__ == "__main__":
     ap.add_argument("--h2", type=int, default=32)
     ap.add_argument("--dropout", type=float, default=0.2)
     ap.add_argument("--patience", type=int, default=8)
-    ap.add_argument("--save_path", default="nn_weights.pt")
-    ap.add_argument("--scaler_path", default="scaler.npz")
-    ap.add_argument("--log_path", default="train_log.json")
-    ap.add_argument("--comparison_path", default="baseline_comparison.txt")
+    ap.add_argument("--save_path", default=str(config.WEIGHTS_DIR / "nn_weights.pt"))
+    ap.add_argument("--scaler_path", default=str(config.WEIGHTS_DIR / "scaler.npz"))
+    ap.add_argument("--log_path", default=str(config.WEIGHTS_DIR / "train_log.json"))
+    ap.add_argument("--comparison_path", default=str(config.WEIGHTS_DIR / "baseline_comparison.txt"))
     args = ap.parse_args()
     train_loop(args)

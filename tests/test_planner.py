@@ -1,7 +1,8 @@
 """Required planner cases: 5 normal, 3 edge, 2 impossible. Owner: Person B.
 
-Uses the stub predictor and stub search until Person A's modules land; switch the two
-fixtures below to the real ones at integration time.
+Every case runs twice: with Person A's search (search.search, UCS) and with the brute-force
+reference_search stub, so a difference between the two shows up as a failing test.
+The predictor stays the stub so the expected marks do not depend on trained weights.
 """
 import dataclasses
 
@@ -14,8 +15,11 @@ from common.types import Assignment
 from integration.planner import NO_SOLUTION, plan_for
 
 
-@pytest.fixture
-def search_fn():
+@pytest.fixture(params=["search", "reference"])
+def search_fn(request):
+    if request.param == "search":
+        from search import search
+        return search
     return reference_search
 
 

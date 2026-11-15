@@ -104,3 +104,47 @@ def build_feature_vector(student_profile: Union[Dict, pd.Series, np.ndarray],
 def apply_effort(base_vector: np.ndarray, extra_sessions: int) -> np.ndarray:
     """Functional shortcut."""
     return EffortTranslator().apply_effort(base_vector, extra_sessions)
+
+
+# ---------------------------------------------------------------------------
+# Contract bridge: common.types.StudentProfile + Plan -> one NN row per assignment.
+# ---------------------------------------------------------------------------
+def assignment_base_row(profile, idx: int) -> Dict[str, float]:
+    """Feature dict (FEATURE_ORDER keys) for assignment idx of a StudentProfile, before any
+    planned sessions.
+
+    profile.history may hold per-assignment values under "<assignment id>/<feature>"
+    (data/profiles.py writes these from the real rows) and student-level values under
+    "<feature>". Missing previous-score features fall back to "prev_score_mean";
+    missing click features are 0.
+    """
+    a = profile.assignments[idx]
+    h = profile.history
+
+    def get(name, default=0.0):
+        return float(h.get(f"{a.id}/{name}", h.get(name, default)))
+
+    mean = float(h.get("prev_score_mean", 0.0))
+    row = {
+        "prev_score": get("prev_score", mean),
+        "cumulative_avg_score": get("cumulative_avg_score", mean),
+        "weight": float(a.weight),
+        "weeks_since_start": float(a.deadline_week),
+        "assessment_type_CMA": 1.0 if a.kind == "CMA" else 0.0,
+        "assessment_type_TMA": 1.0 if a.kind == "TMA" else 0.0,
+    }
+    for c in CLICK_COLS:
+        row[c] = get(c, 0.0)
+    return row
+
+
+def features_for_plan(profile, plan) -> np.ndarray:
+    """NN input matrix [n_assignments, len(FEATURE_ORDER)] for a plan.
+
+    Each planned session for an assignment adds profile.clicks_per_session clicks to that
+    assignment's 4-week window, split with CLICK_DISTRIB and WEEK_WEIGHTS above.
+    """
+    translator = EffortTranslator(clicks_per_session=profile.clicks_per_session)
+    rows = [translator.apply_effort(_profile_to_vector(assignment_base_row(profile, i)), int(n))
+            for i, n in enumerate(plan)]
+    return np.vstack(rows)

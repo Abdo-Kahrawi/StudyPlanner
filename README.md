@@ -59,5 +59,6 @@ In the Owner column above, A means Abdo and B means Zeyad.
 
 ## Status
 
-Skeleton only. Functions raise `NotImplementedError` with the owner and target week.
-`common/stubs.py` provides a fake predictor and a simple scheduler so both sides can build in parallel.
+All modules are implemented. Run `python -m data.make_data` then `python -m nn.train` before the
+demo and experiments: until trained weights exist in `nn/weights/`, the planner falls back to the
+stub predictor in `common/stubs.py` and says so.

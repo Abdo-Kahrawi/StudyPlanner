@@ -43,16 +43,15 @@ def summarize(df: pd.DataFrame, by: list[str], metrics: list[str], name: str | N
 
 def load_predictor(kind: str = "nn"):
     """The requested predictor, or the stub if Person A's model is not ready yet."""
-    from nn.predictor import AverageMarkPredictor, MarkPredictor
     from common.stubs import HistoryFakePredictor
-    cls = MarkPredictor if kind == "nn" else AverageMarkPredictor
-    pred = cls()
     try:
+        from nn.predictor import AverageMarkPredictor, MarkPredictor
         from common.examples import example_profile
+        pred = MarkPredictor() if kind == "nn" else AverageMarkPredictor()
         pred.predict(example_profile(), (0, 0, 0))
         return pred
-    except (NotImplementedError, FileNotFoundError, OSError):
-        print(f"note: '{kind}' predictor not ready, using the stub HistoryFakePredictor")
+    except (ImportError, NotImplementedError, FileNotFoundError, OSError) as e:
+        print(f"note: '{kind}' predictor not ready ({e}), using the stub HistoryFakePredictor")
         return HistoryFakePredictor()
 
 
