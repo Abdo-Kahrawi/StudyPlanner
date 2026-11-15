@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+# Raw and processed data are rebuilt by data/make_data.py
+data/raw/
+data/processed/
+results/*.csv
+results/*.png
+!results/.gitkeep

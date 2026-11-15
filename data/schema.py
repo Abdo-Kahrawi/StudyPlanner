@@ -80,25 +80,6 @@ CLICK_4W = {
 ALL_COLUMNS = KEYS + [TARGET] + FEATURES
 # KEYS (3) + TARGET (1) + FEATURES (18) = 22 columns, matches CSVs
 
-# ---------------------------------------------------------------------------
-# Template -> real mapping, for anyone reading the old draft
-# ---------------------------------------------------------------------------
-TEMPLATE_TO_REAL = {
-    # template name -> real column(s) or None if it does not exist
-    "clicks_4w_content": "sum(group_content_week1..week4) - derived, see CLICK_4W",
-    "clicks_4w_interactive": "sum(group_quizzes_week1..week4) - derived",
-    "clicks_4w_assessment_prep": "sum(group_other_week1..week4) - derived",
-    "prev_score_mean": "cumulative_avg_score",
-    "prev_score_last": "prev_score",
-    "n_prev_assessments": None,  # NOT in CSVs - would need to recompute from assessments table
-    "is_tma": "assessment_type_TMA (bool) - plus assessment_type_CMA",
-    "weight": "weight",
-    "weeks_since_start": "weeks_since_start",
-    "clicks_total_so_far": None,  # NOT in CSVs - only 4-week window is provided
-    "active_days_4w": None,  # NOT in CSVs - only click counts, not distinct days
-    "days_submitted_early_prev": None,  # NOT in CSVs
-    "score": "target_score",
-}
 
 # ---------------------------------------------------------------------------
 # Helpers
