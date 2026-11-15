@@ -60,3 +60,49 @@ def eval_model(model: nn.Module, x: Union[np.ndarray, torch.Tensor]) -> np.ndarr
 
 def count_params(model):
     return sum(p.numel() for p in model.parameters())
+
+
+# ---------------------------------------------------------------------------
+# Monotone variant (fallback from the project plan's risk table): the plain MLP
+# barely reacts to extra clicks on OULAD BBB, so search has nothing to optimise.
+# mark = base(non-click features) + effort(click features), where effort has only
+# positive weights and increasing activations, so more clicks can never lower the mark.
+# Click features are fed as log1p(clicks) (see nn/effort.py: transform_rows), which gives
+# diminishing returns per click.
+# ---------------------------------------------------------------------------
+class _PositiveLinear(nn.Module):
+    def __init__(self, n_in: int, n_out: int):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(n_out, n_in) * 0.1)
+        self.bias = nn.Parameter(torch.zeros(n_out))
+
+    def forward(self, x):
+        return x @ nn.functional.softplus(self.weight).T + self.bias
+
+
+class MonotoneScoreNet(nn.Module):
+    def __init__(self, click_idx, input_dim: int = INPUT_DIM, hidden1: int = 64, hidden2: int = 32,
+                 dropout: float = 0.2, effort_hidden: int = 16, base_mark: float = 0.0):
+        super().__init__()
+        self.click_idx = list(click_idx)
+        self.other_idx = [i for i in range(input_dim) if i not in self.click_idx]
+        self.base = nn.Sequential(
+            nn.Linear(len(self.other_idx), hidden1), nn.LayerNorm(hidden1), nn.ReLU(), nn.Dropout(dropout),
+            nn.Linear(hidden1, hidden2), nn.LayerNorm(hidden2), nn.ReLU(), nn.Dropout(dropout),
+            nn.Linear(hidden2, 1))
+        self.effort = nn.Sequential(_PositiveLinear(len(self.click_idx), effort_hidden), nn.Softplus(),
+                                    _PositiveLinear(effort_hidden, 1))
+        with torch.no_grad():
+            self.base[-1].bias.fill_(base_mark)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return (self.base(x[:, self.other_idx]) + self.effort(x[:, self.click_idx])).squeeze(-1)
+
+
+def build_model(arch: str = "mlp", input_dim: int = INPUT_DIM, **kwargs) -> nn.Module:
+    if arch == "mlp":
+        kwargs.pop("click_idx", None); kwargs.pop("base_mark", None)
+        return get_model(input_dim=input_dim, **kwargs)
+    if arch == "monotone":
+        return MonotoneScoreNet(input_dim=input_dim, **kwargs)
+    raise ValueError(f"unknown arch {arch!r}")

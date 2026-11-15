@@ -45,6 +45,8 @@ def _history(rows: pd.DataFrame) -> dict[str, float]:
         for k in ROW_FEATURES:
             if k in r and pd.notna(r[k]):
                 out[f"{r['id_assessment']}/{k}"] = float(r[k])
+        if "target_score" in r and pd.notna(r["target_score"]):   # evaluation only, never an NN input
+            out[f"{r['id_assessment']}/actual_score"] = float(r["target_score"])
     first = rows.iloc[0]
     for k in ("cumulative_avg_score", "prev_score"):
         if k in first and pd.notna(first[k]) and float(first[k]) > 0:

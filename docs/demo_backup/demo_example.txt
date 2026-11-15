@@ -1,0 +1,47 @@
+================================================================
+Student 0: target 55, 3 free study slots per week, planning from week 1
+  A1: TMA, weight 20, deadline end of week 4
+  A2: TMA, weight 30, deadline end of week 8
+  A3: TMA, weight 50, deadline end of week 12
+================================================================
+
+--- predictor: nn (nn), search: ucs, csp: BT+FC+AC-3
+Plan found: (3, 1, 0) (4 sessions). Predicted marks: A1: 56.1, A2: 56.2, A3: 56.7.
+Search: 22 nodes expanded, 37 generated
+CSP: called on 5 plans; NN said enough but CSP rejected 0 plan(s)
+
+Timetable
+Week  1: slot 1: A1 #1, slot 2: A1 #2, slot 3: A1 #3
+Week  2: slot 1: A2 #1
+
+Search trace (first 40 steps)
+   {'step': 1, 'plan': (0, 0, 0), 'cost': 0, 'min_margin': -7.6063995361328125}
+   {'step': 2, 'plan': (1, 0, 0), 'cost': 1, 'min_margin': -5.321533203125}
+   {'step': 3, 'plan': (0, 1, 0), 'cost': 1, 'min_margin': -7.6063995361328125}
+   {'step': 4, 'plan': (0, 0, 1), 'cost': 1, 'min_margin': -7.6063995361328125}
+   {'step': 5, 'plan': (2, 0, 0), 'cost': 2, 'min_margin': -1.9355850219726562}
+   {'step': 6, 'plan': (1, 1, 0), 'cost': 2, 'min_margin': -5.321533203125}
+   {'step': 7, 'plan': (1, 0, 1), 'cost': 2, 'min_margin': -5.321533203125}
+   {'step': 8, 'plan': (0, 2, 0), 'cost': 2, 'min_margin': -7.6063995361328125}
+   {'step': 9, 'plan': (0, 1, 1), 'cost': 2, 'min_margin': -7.6063995361328125}
+   {'step': 10, 'plan': (0, 0, 2), 'cost': 2, 'min_margin': -7.6063995361328125}
+   {'step': 11, 'plan': (3, 0, 0), 'cost': 3, 'min_margin': -1.0557785034179688}
+   {'step': 12, 'plan': (2, 1, 0), 'cost': 3, 'min_margin': -1.9355850219726562}
+   {'step': 13, 'plan': (2, 0, 1), 'cost': 3, 'min_margin': -1.9355850219726562}
+   {'step': 14, 'plan': (1, 2, 0), 'cost': 3, 'min_margin': -5.321533203125}
+   {'step': 15, 'plan': (1, 1, 1), 'cost': 3, 'min_margin': -5.321533203125}
+   {'step': 16, 'plan': (1, 0, 2), 'cost': 3, 'min_margin': -5.321533203125}
+   {'step': 17, 'plan': (0, 3, 0), 'cost': 3, 'min_margin': -7.6063995361328125}
+   {'step': 18, 'plan': (0, 2, 1), 'cost': 3, 'min_margin': -7.6063995361328125}
+   {'step': 19, 'plan': (0, 1, 2), 'cost': 3, 'min_margin': -7.6063995361328125}
+   {'step': 20, 'plan': (0, 0, 3), 'cost': 3, 'min_margin': -7.6063995361328125}
+   {'step': 21, 'plan': (4, 0, 0), 'cost': 4, 'min_margin': -1.0557785034179688}
+   {'step': 22, 'plan': (3, 1, 0), 'cost': 4, 'min_margin': 1.0623550415039062}
+
+CSP on plan (3, 1, 0) with and without FC / AC-3
+  mode        ok     assignments  backtracks    pruned
+  BT          True             4           0         0
+  BT+FC       True             4           0         6
+  BT+FC+AC-3  True             4           0         9
+
+Saved plot: /home/user/StudyPlanner/results/demo_example_nn.png

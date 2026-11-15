@@ -29,17 +29,21 @@ Put the OULAD CSVs in `data/raw/` (or let step 1 download them), then from the r
 
 ```bash
 python -m data.make_data                  # 1. raw OULAD -> data/processed/{train,test}_data.csv (seed 42)
-python -m nn.train --seed 42              # 2. train the NN, compare with the average baseline -> nn/weights/
+python -m nn.train --seed 42              # 2. train the NN (monotone in clicks), compare with baselines -> nn/weights/
 python -m eval.monotonicity --real        # 3. monotonicity check and violation report
 python run_demo.py                        # 4. integrated demo with plots (see docs/demo_script.md)
 python -m eval.run_profiles --real        # 5. planner output for 30 OULAD profiles
-python -m eval.exp1_search                # 6. Experiment 1: UCS vs Greedy vs A*
+python -m eval.exp1_planner --real        # 6. Experiment 1: UCS vs Greedy vs A* in the planner
 python -m eval.exp2_csp --real            # 7. Experiment 2: BT vs BT+FC vs BT+FC+AC-3
-python -m eval.exp3_nn_vs_avg             # 8. Experiment 3: NN vs average predictor
+python -m eval.exp3_planner --real        # 8. Experiment 3: NN vs average predictor in the planner
+python -m eval.exp3_nn_vs_avg             #    + standalone NN vs average RMSE / MAE
+python -m eval.exp1_search                #    + standalone search comparison on training rows
 pytest -q                                 # tests
 ```
 
-Results (CSV tables and PNG plots) go to `results/`. Without trained weights, the demo and
+Results (CSV tables and PNG plots) go to `results/`; the numbers from the real-data run are in
+`docs/results.md`. For the plain MLP used as a comparison in Experiment 3, also run
+`python -m nn.train --arch mlp --save_path nn/weights/mlp/nn_weights.pt --scaler_path nn/weights/mlp/scaler.npz --log_path nn/weights/mlp/train_log.json --comparison_path nn/weights/mlp/baseline_comparison.txt`. Without trained weights, the demo and
 experiments fall back to the stub predictor and print a note saying so.
 
 ## Layout and owners
