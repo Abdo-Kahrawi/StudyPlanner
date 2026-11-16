@@ -1,6 +1,6 @@
-"""Required planner cases: 5 normal, 3 edge, 2 impossible. Owner: Person B.
+"""Required planner cases: 5 normal, 3 edge, 2 impossible. Owner: Zeyad.
 
-Every case runs twice: with Person A's search (search.search, UCS) and with the brute-force
+Every case runs twice: with Abdo's search (search.search, UCS) and with the brute-force
 reference_search stub, so a difference between the two shows up as a failing test.
 The predictor stays the stub so the expected marks do not depend on trained weights.
 """

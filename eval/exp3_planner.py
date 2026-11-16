@@ -8,7 +8,7 @@ seeds; only the predictor changes. Targets 60 / 70 / 80 as in exp1_planner. Pred
 Measures % of profiles solved, plan cost, and how often the predictor's "no sessions
 needed" call (all predicted marks >= target with 0 sessions) agrees with the student's
 ACTUAL held-out marks (all actual marks >= target). Standalone MAE / RMSE is in
-eval/exp3_nn_vs_avg.py (Person A).
+eval/exp3_nn_vs_avg.py (Abdo).
 
     python -m eval.exp3_planner --real
 """

@@ -1,4 +1,4 @@
-"""NN tests incl. the monotonicity check (marks must not go DOWN with more effort). Owner: Person A."""
+"""NN tests incl. the monotonicity check (marks must not go DOWN with more effort). Owner: Abdo."""
 import os
 
 import numpy as np

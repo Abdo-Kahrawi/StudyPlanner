@@ -6,7 +6,7 @@ BT+FC+AC-3, 3 slots per week. Most real students already reach the generated tar
 give search real work. Measures nodes expanded / generated, plan cost (total sessions),
 % of profiles solved and runtime; cost excess is measured against UCS (optimal).
 
-eval/exp1_search.py is Person A's standalone version (training rows, no CSP).
+eval/exp1_search.py is Abdo's standalone version (training rows, no CSP).
 
     python -m eval.exp1_planner --real
 Writes results/exp1_planner_raw.csv, results/exp1_planner_summary.csv and plots.

@@ -1,4 +1,4 @@
-"""Monotonicity check and violation report for the NN (project deliverable P2). Owner: Person A.
+"""Monotonicity check and violation report for the NN (project deliverable P2). Owner: Abdo.
 
 For every profile and assignment, predict the mark with 0, 1, ..., max_sessions sessions
 (other assignments at 0). A violation is a step where one more session LOWERS the predicted

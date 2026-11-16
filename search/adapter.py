@@ -1,4 +1,4 @@
-"""search() entry point used by integration/ and eval/. Bridges Person A's search classes
+"""search() entry point used by integration/ and eval/. Bridges Abdo's search classes
 (UCS, Greedy, A* over StudyPlannerProblem) to the shared contract in common/types.py.
 
     search(profile, predictor, strategy, is_schedulable, max_sessions) -> common.types.SearchResult

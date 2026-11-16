@@ -1,4 +1,4 @@
-"""Project deliverable: planner output for 30+ student profiles. Owner: Person B.
+"""Project deliverable: planner output for 30+ student profiles. Owner: Zeyad.
 
 Writes, for every profile:
     results/profiles_summary.csv    one row per student: plan, predicted marks, status, counters

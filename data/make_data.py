@@ -1,4 +1,4 @@
-"""make_data.py - build the NN training data from raw OULAD. Owner: Person A.
+"""make_data.py - build the NN training data from raw OULAD. Owner: Abdo.
 
 Originally exported from the Colab notebook make_data.ipynb (kept at the repo root for the
 exploration and plots). This module keeps the cleaning rules from the notebook, without the

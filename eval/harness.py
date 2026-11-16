@@ -1,4 +1,4 @@
-"""Run an experiment over seeds; write raw rows and a mean/std table. Owner: Person B.
+"""Run an experiment over seeds; write raw rows and a mean/std table. Owner: Zeyad.
 
 An experiment is a function `fn(seed) -> list[dict]` returning one dict per measured run.
 The harness adds the seed, saves results/<name>_raw.csv and results/<name>_summary.csv.
@@ -42,7 +42,7 @@ def summarize(df: pd.DataFrame, by: list[str], metrics: list[str], name: str | N
 
 
 def load_predictor(kind: str = "nn"):
-    """The requested predictor, or the stub if Person A's model is not ready yet."""
+    """The requested predictor, or the stub if Abdo's model is not ready yet."""
     from common.stubs import HistoryFakePredictor
     try:
         from nn.predictor import AverageMarkPredictor, MarkPredictor
@@ -56,7 +56,7 @@ def load_predictor(kind: str = "nn"):
 
 
 def load_search():
-    """Person A's search, or the brute-force stub if it is not ready yet."""
+    """Abdo's search, or the brute-force stub if it is not ready yet."""
     from search import search
     from common.examples import example_profile
     from common.stubs import FakePredictor, reference_search

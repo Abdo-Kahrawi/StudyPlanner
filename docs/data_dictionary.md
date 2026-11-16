@@ -1,6 +1,6 @@
 # Data dictionary
 
-Owner: Person A (generated profile fields: Person B).
+Owner: Abdo (generated profile fields: Zeyad).
 Built by `python -m data.make_data` (course **BBB**, train presentations 2013B, 2013J, 2014B,
 test presentation 2014J, seed 42). Column names are fixed in `data/schema.py`.
 

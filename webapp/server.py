@@ -1,4 +1,4 @@
-"""StudyPlanner web app. Owner: Person B.
+"""StudyPlanner web app. Owner: Zeyad.
 
 Run from the project folder (only the project's own requirements are needed):
     python -m webapp            # opens http://localhost:8000

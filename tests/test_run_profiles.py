@@ -1,4 +1,4 @@
-"""The 30-profile deliverable runs end to end and every schedule is valid. Owner: Person B."""
+"""The 30-profile deliverable runs end to end and every schedule is valid. Owner: Zeyad."""
 from common.stubs import HistoryFakePredictor, reference_search
 from data.profiles import synthetic_profiles
 from eval.run_profiles import run_profiles

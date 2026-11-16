@@ -1,4 +1,4 @@
-"""Build student profiles for the planner. Owner: Person B.
+"""Build student profiles for the planner. Owner: Zeyad.
 
 Real fields come from the processed OULAD tables (data/processed/train_data.csv and
 test_data.csv, built by data/make_data.py; columns in data/schema.py). Generated fields follow the rules below, with a fixed seed,

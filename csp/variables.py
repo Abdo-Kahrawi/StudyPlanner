@@ -1,4 +1,4 @@
-"""Build the scheduling CSP for one plan. Owner: Person B.
+"""Build the scheduling CSP for one plan. Owner: Zeyad.
 
 Variables  : one per study session, (assignment_id, k) with k = 0..n-1.
 Values     : slot indices t = week * slots_per_week + slot, for

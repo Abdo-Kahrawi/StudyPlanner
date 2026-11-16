@@ -2,8 +2,8 @@
 
 | Role | Name | Branch prefix |
 | --- | --- | --- |
-| Abdo (data, nn, search) | Abdelrahman Farghaly | `a/` |
-| Zeyad (csp, integration, eval, demo) | Zeyad Salem | `b/` |
+| Prediction side (data, nn, search) | Abdelrahman Farghaly (Abdo) | `a/` |
+| Scheduling side (csp, integration, eval, demo, web app) | Zeyad Salem | `b/` |
 
 ## Rules
 

@@ -1,4 +1,4 @@
-"""Integrated demo: input, solution, and plots of how search, NN and CSP cooperate. Owner: Person B.
+"""Integrated demo: input, solution, and plots of how search, NN and CSP cooperate. Owner: Zeyad.
 
 Examples:
     python run_demo.py                                  # the worked example from the brief

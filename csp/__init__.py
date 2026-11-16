@@ -1,4 +1,4 @@
-"""Scheduling CSP. Owner: Person B (Week 2-3)."""
+"""Scheduling CSP. Owner: Zeyad (Week 2-3)."""
 from csp.solver import schedule
 
 __all__ = ["schedule"]

@@ -4,8 +4,8 @@ This guide explains every slide of the final presentation and every number on th
 who presents it. For each slide it gives what to say, where each number comes from (file and
 command), and questions the TA may ask with short answers.
 
-- **Abdo Kahrawi (Person A, prediction side):** data, neural network, search, Experiments 1 and 3, limits.
-- **Zeyad Salem (Person B, scheduling side):** problem and loop, CSP, Experiment 2, integration,
+- **Abdo Kahrawi (prediction side):** data, neural network, search, Experiments 1 and 3, limits.
+- **Zeyad Salem (scheduling side):** problem and loop, CSP, Experiment 2, integration,
   conclusions, the web app.
 - **Both:** the live demo.
 
@@ -306,16 +306,18 @@ lowered the predicted mark on 39% of steps. The monotone network has 0% by const
 - **Goal test:** every predicted mark is at least the target AND the CSP can schedule the plan.
 - **UCS** orders by g (cost so far): optimal but wide. **Greedy** orders by h only: fast, no
   guarantee. **A\*** orders by g + h: optimal with an admissible h.
-- **Heuristic:** take the assignment furthest below the target, divide its deficit by the biggest
-  gain one session can give this student (computed from the NN before search), round up. Example:
-  8 marks short with a maximum gain of 2.68 means at least 3 more sessions.
+- **Heuristic:** for each assignment, take the marks still missing, divide by the biggest gain
+  one session can give this student (computed from the NN before search) and round up. Add these
+  up over the assignments. Example: an assignment 8 marks short with a maximum gain of 2.68 needs
+  at least 3 more sessions.
 - At most 10 sessions per assignment.
 
-**Q: Why is the heuristic admissible?** No session can add more than the maximum gain, so you need
-at least deficit / max gain sessions. It never overestimates, so A* returns the optimal plan.
+**Q: Why is the heuristic admissible?** No session can add more than the maximum gain, so each
+assignment needs at least deficit / max gain sessions. A session only helps the assignment it is
+given to, so these minimums add up. The sum never overestimates, so A* returns the optimal plan.
 
-**Q: Is it consistent?** One step lowers the deficit by at most the maximum gain, so h drops by at
-most 1 per step, which equals the step cost.
+**Q: Is it consistent?** One step adds a session to one assignment and lowers that assignment's
+deficit by at most the maximum gain, so h drops by at most 1 per step, which equals the step cost.
 
 ## Slide 8. Experiment 1: search (ends at 5:00)
 

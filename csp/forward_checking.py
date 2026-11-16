@@ -1,4 +1,4 @@
-"""Forward Checking for the scheduling CSP. Owner: Person B."""
+"""Forward Checking for the scheduling CSP. Owner: Zeyad."""
 from __future__ import annotations
 
 from csp.variables import SchedulingCSP, Var

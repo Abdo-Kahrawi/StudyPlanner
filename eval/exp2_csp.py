@@ -1,4 +1,4 @@
-"""Experiment 2: BT vs BT+FC vs BT+FC+AC-3 at 2, 3, 4 slots per week. Owner: Person B.
+"""Experiment 2: BT vs BT+FC vs BT+FC+AC-3 at 2, 3, 4 slots per week. Owner: Zeyad.
 
 For each seed: build 30 profiles, let the planner pick a plan at 3 slots per week, then
 schedule that same plan with each CSP mode at 2, 3 and 4 slots per week. Fewer slots make

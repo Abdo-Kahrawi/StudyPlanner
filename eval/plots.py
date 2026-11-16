@@ -1,4 +1,4 @@
-"""Shared plotting helpers for experiments and run_demo.py. Owner: Person B."""
+"""Shared plotting helpers for experiments and run_demo.py. Owner: Zeyad."""
 from __future__ import annotations
 
 import matplotlib
