@@ -1,0 +1,6 @@
+NN vs Baseline - Study Planner
+NN test MSE: 835.806884765625 RMSE: 28.910324096679688
+NN best val MSE: 187.3105 RMSE: 13.6861
+Baseline cumulative_avg MSE: 1476.7657036888083 RMSE: 38.42870936798175
+Baseline train_mean (78.94) MSE: 903.7304
+Conclusion: NN WORTH IT

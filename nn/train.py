@@ -19,8 +19,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 from common import config
-from .model import get_model, INPUT_DIM, count_params
-from .effort import FEATURE_ORDER
+from .model import build_model, INPUT_DIM, count_params
+from .effort import FEATURE_ORDER, CLICK_COLS, transform_rows
 
 
 def set_seed(seed: int) -> None:
@@ -79,6 +79,10 @@ def train_loop(args):
     else:
         X_train, X_val, y_train, y_val = train_test_split(X_full, y_full, test_size=0.15, random_state=args.seed)
 
+    log_clicks = args.arch == "monotone"
+    X_train, X_val = transform_rows(X_train, log_clicks).astype(np.float32), transform_rows(X_val, log_clicks).astype(np.float32)
+    if X_test is not None:
+        X_test = transform_rows(X_test, log_clicks).astype(np.float32)
     scaler = StandardScaler()
     X_train_s = scaler.fit_transform(X_train)
     X_val_s = scaler.transform(X_val)
@@ -92,7 +96,9 @@ def train_loop(args):
                               generator=torch.Generator().manual_seed(args.seed))
     val_loader = DataLoader(val_ds, batch_size=args.batch)
 
-    model = get_model(input_dim=INPUT_DIM, hidden1=args.h1, hidden2=args.h2, dropout=args.dropout)
+    model = build_model(args.arch, input_dim=INPUT_DIM, hidden1=args.h1, hidden2=args.h2,
+                        dropout=args.dropout, click_idx=[FEATURE_ORDER.index(c) for c in CLICK_COLS],
+                        base_mark=float(y_train.mean()))
     print(f"Model params: {count_params(model)}")
     opt = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-4)
     loss_fn = nn.MSELoss()
@@ -199,7 +205,9 @@ def train_loop(args):
     for path in (args.save_path, args.scaler_path, args.log_path, args.comparison_path):
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     torch.save(model.state_dict(), args.save_path)
-    np.savez(args.scaler_path, mean=scaler.mean_, scale=scaler.scale_, feature_order=np.array(FEATURE_ORDER))
+    np.savez(args.scaler_path, mean=scaler.mean_, scale=scaler.scale_, feature_order=np.array(FEATURE_ORDER),
+             arch=args.arch, log_clicks=log_clicks,
+             model_kwargs=json.dumps({"hidden1": args.h1, "hidden2": args.h2, "dropout": args.dropout}))
     with open(args.log_path,"w") as f:
         json.dump({"log":log, "test":results, "baseline_mse":float(b_mse) if not np.isnan(b_mse) else None,
                    "baseline_rmse":float(b_rmse) if not np.isnan(b_rmse) else None,
@@ -220,6 +228,8 @@ if __name__ == "__main__":
     ap.add_argument("--train_csv", default=str(config.PROCESSED_DIR / "train_data.csv"))
     ap.add_argument("--test_csv", default=str(config.PROCESSED_DIR / "test_data.csv"))
     ap.add_argument("--seed", type=int, default=config.SEED)
+    ap.add_argument("--arch", choices=["mlp", "monotone"], default="monotone",
+                    help="mlp = plain MLP; monotone = MLP + click branch that can only raise the mark")
     ap.add_argument("--epochs", type=int, default=60)
     ap.add_argument("--batch", type=int, default=256)
     ap.add_argument("--lr", type=float, default=1e-3)

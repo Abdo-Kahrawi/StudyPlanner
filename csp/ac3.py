@@ -1,4 +1,4 @@
-"""AC-3 arc consistency for the scheduling CSP. Owner: Person B."""
+"""AC-3 arc consistency for the scheduling CSP. Owner: Zeyad."""
 from __future__ import annotations
 
 from collections import deque

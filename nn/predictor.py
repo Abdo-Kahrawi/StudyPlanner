@@ -22,10 +22,19 @@ DEFAULT_SCALER = str(config.WEIGHTS_DIR / "scaler.npz")
 
 class StudyPredictor:
     def __init__(self, weights_path: str = DEFAULT_WEIGHTS, scaler_path: str = DEFAULT_SCALER, input_dim: int = len(FEATURE_ORDER)):
-        from .model import get_model  # needs torch; imported here so the module loads without it
+        from .model import build_model  # needs torch; imported here so the module loads without it
+        from .effort import CLICK_COLS
         self.weights_path = weights_path
         self.scaler_path = scaler_path
-        self.model = get_model(input_dim=input_dim)
+        self.arch, self.log_clicks, kwargs = "mlp", False, {}
+        if os.path.exists(scaler_path):
+            meta = np.load(scaler_path, allow_pickle=True)
+            if "arch" in meta:
+                import json
+                self.arch, self.log_clicks = str(meta["arch"]), bool(meta["log_clicks"])
+                kwargs = json.loads(str(meta["model_kwargs"]))
+        self.model = build_model(self.arch, input_dim=input_dim,
+                                 click_idx=[FEATURE_ORDER.index(c) for c in CLICK_COLS], **kwargs)
         self.scaler_mean = None
         self.scaler_scale = None
         self.feature_order = FEATURE_ORDER
@@ -57,6 +66,8 @@ class StudyPredictor:
         self.model.eval()
 
     def _scale(self, vec: np.ndarray) -> np.ndarray:
+        from .effort import transform_rows
+        vec = transform_rows(vec, self.log_clicks)
         if self.scaler_mean is not None and self.scaler_scale is not None:
             return (vec - self.scaler_mean) / (self.scaler_scale + 1e-8)
         return vec
@@ -118,11 +129,17 @@ class MarkPredictor:
 
 class AverageMarkPredictor:
     """Baseline: the student's previous average mark, ignores effort (same rule as nn/train.py:
-    cumulative_avg_score if > 0, else prev_score if > 0, else `default`)."""
+    cumulative_avg_score if > 0, else prev_score if > 0, else `default`). `default` is the
+    mean training mark when data/processed/train_data.csv exists, as in nn/train.py."""
 
     name = "avg"
 
-    def __init__(self, default: float = 55.0):
+    def __init__(self, default: float | None = None):
+        if default is None:
+            default = 55.0
+            path = config.PROCESSED_DIR / "train_data.csv"
+            if path.exists():
+                default = float(pd.read_csv(path, usecols=["target_score"])["target_score"].mean())
         self.default = default
 
     def predict(self, profile: StudentProfile, plan: Plan) -> np.ndarray:

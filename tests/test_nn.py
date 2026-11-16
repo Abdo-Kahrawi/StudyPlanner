@@ -1,4 +1,4 @@
-"""NN tests incl. the monotonicity check (marks must not go DOWN with more effort). Owner: Person A."""
+"""NN tests incl. the monotonicity check (marks must not go DOWN with more effort). Owner: Abdo."""
 import os
 
 import numpy as np
@@ -33,3 +33,17 @@ def test_monotonicity():
     p, nn = example_profile(), MarkPredictor()
     marks = np.array([nn.predict(p, (n, n, n)) for n in range(11)])
     assert np.all(np.diff(marks, axis=0) >= -0.5), "NN marks drop when sessions are added"
+
+
+def test_monotone_model_never_drops_with_more_clicks():
+    torch = pytest.importorskip("torch")
+    from nn.effort import CLICK_COLS
+    from nn.model import MonotoneScoreNet
+    torch.manual_seed(0)
+    click = [FEATURE_ORDER.index(c) for c in CLICK_COLS]
+    model = MonotoneScoreNet(click, input_dim=len(FEATURE_ORDER)).eval()
+    x = torch.randn(64, len(FEATURE_ORDER))
+    more = x.clone()
+    more[:, click] += torch.rand(64, len(click)) * 3
+    with torch.no_grad():
+        assert torch.all(model(more) >= model(x) - 1e-5)

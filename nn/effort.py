@@ -148,3 +148,13 @@ def features_for_plan(profile, plan) -> np.ndarray:
     rows = [translator.apply_effort(_profile_to_vector(assignment_base_row(profile, i)), int(n))
             for i, n in enumerate(plan)]
     return np.vstack(rows)
+
+
+def transform_rows(X: np.ndarray, log_clicks: bool) -> np.ndarray:
+    """Model-input transform applied before scaling: log1p on click columns for the
+    monotone model (an increasing map, so monotonicity in clicks is kept)."""
+    X = np.array(X, dtype=float, copy=True)
+    if log_clicks:
+        idx = [FEATURE_ORDER.index(c) for c in CLICK_COLS]
+        X[..., idx] = np.log1p(np.clip(X[..., idx], 0, None))
+    return X

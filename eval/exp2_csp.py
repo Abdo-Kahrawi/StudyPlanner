@@ -1,4 +1,4 @@
-"""Experiment 2: BT vs BT+FC vs BT+FC+AC-3 at 2, 3, 4 slots per week. Owner: Person B.
+"""Experiment 2: BT vs BT+FC vs BT+FC+AC-3 at 2, 3, 4 slots per week. Owner: Zeyad.
 
 For each seed: build 30 profiles, let the planner pick a plan at 3 slots per week, then
 schedule that same plan with each CSP mode at 2, 3 and 4 slots per week. Fewer slots make
@@ -7,7 +7,7 @@ here so every mode does its own work.
 
 Usage:
     python -m eval.exp2_csp            # synthetic profiles until real data exists
-    python -m eval.exp2_csp --real     # profiles from data/processed/features.parquet
+    python -m eval.exp2_csp --real     # OULAD profiles from data/processed/
 """
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ import time
 from common import config
 from csp.solver import MODES, schedule
 from eval import harness, plots
+from eval.exp1_planner import TARGETS
 from integration.planner import plan_for
 
 SLOTS = (2, 3, 4)
@@ -32,22 +33,27 @@ def make_experiment(real: bool, n_profiles: int):
 
     def experiment(seed: int) -> list[dict]:
         rows = []
-        for base in harness.load_profiles(n_profiles, seed, real):
-            base3 = dataclasses.replace(base, slots_per_week=3)
-            plan = plan_for(base3, predictor, "ucs", search_fn=search_fn).plan
-            if plan is None or sum(plan) == 0:
-                continue
-            for slots in SLOTS:
-                prof = dataclasses.replace(base, slots_per_week=slots)
-                for mode, (fc, ac3) in MODES.items():
-                    t0 = time.perf_counter()
-                    r = schedule(plan, prof, use_fc=fc, use_ac3=ac3, max_assignments=LIMIT)
-                    rows.append({"profile": base.student_id, "slots_per_week": slots, "mode": mode,
-                                 "sessions": sum(plan), "ok": int(r.ok),
-                                 "assignments": r.assignments, "backtracks": r.backtracks,
-                                 "values_pruned": r.values_pruned,
-                                 "hit_limit": int(any("stopped" in m for m in r.log)),
-                                 "seconds": time.perf_counter() - t0})
+        for profile in harness.load_profiles(n_profiles, seed, real):
+            # Plans come from the Experiment 1 setting (UCS, 3 slots/week, targets 60/70/80),
+            # because most real students need 0 sessions at their own generated target.
+            for target in TARGETS:
+                base = dataclasses.replace(profile, target=target)
+                base3 = dataclasses.replace(base, slots_per_week=3)
+                plan = plan_for(base3, predictor, "ucs", search_fn=search_fn).plan
+                if plan is None or sum(plan) == 0:
+                    continue
+                for slots in SLOTS:
+                    prof = dataclasses.replace(base, slots_per_week=slots)
+                    for mode, (fc, ac3) in MODES.items():
+                        t0 = time.perf_counter()
+                        r = schedule(plan, prof, use_fc=fc, use_ac3=ac3, max_assignments=LIMIT)
+                        rows.append({"profile": base.student_id, "target": target,
+                                     "slots_per_week": slots, "mode": mode,
+                                     "sessions": sum(plan), "ok": int(r.ok),
+                                     "assignments": r.assignments, "backtracks": r.backtracks,
+                                     "values_pruned": r.values_pruned,
+                                     "hit_limit": int(any("stopped" in m for m in r.log)),
+                                     "seconds": time.perf_counter() - t0})
         return rows
     return experiment
 

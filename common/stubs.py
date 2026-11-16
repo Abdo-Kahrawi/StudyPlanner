@@ -51,7 +51,7 @@ def reference_search(profile, predictor, strategy, is_schedulable, max_sessions)
     """Brute-force stand-in for search.search: tries plans in order of total sessions.
 
     Same signature and SearchResult as the real search, so integration/ can be built and
-    tested before Person A's UCS/Greedy/A* land. Ignores `strategy`. Not for experiments.
+    tested before Abdo's UCS/Greedy/A* land. Ignores `strategy`. Not for experiments.
     """
     from itertools import product
 

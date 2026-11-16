@@ -1,4 +1,4 @@
-"""Search unit tests incl. a small example with a known answer. Owner: Person A."""
+"""Search unit tests incl. a small example with a known answer. Owner: Abdo."""
 import numpy as np
 import pytest
 

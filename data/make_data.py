@@ -1,4 +1,4 @@
-"""make_data.py - build the NN training data from raw OULAD. Owner: Person A.
+"""make_data.py - build the NN training data from raw OULAD. Owner: Abdo.
 
 Originally exported from the Colab notebook make_data.ipynb (kept at the repo root for the
 exploration and plots). This module keeps the cleaning rules from the notebook, without the
@@ -25,7 +25,8 @@ import pandas as pd
 
 from common import config
 
-OULAD_URL = "https://analyse.kmi.open.ac.uk/open_dataset/download"
+# The OU download link now redirects to a web page; UCI hosts the same zip.
+OULAD_URL = "https://archive.ics.uci.edu/static/public/349/open+university+learning+analytics+dataset.zip"
 RAW_FILES = ['assessments.csv', 'courses.csv', 'studentAssessment.csv',
              'studentRegistration.csv', 'vle.csv', 'studentVle.csv']
 INTERIM_DIR = config.ROOT / 'data' / 'interim'
@@ -176,8 +177,8 @@ def download_oulad(raw_dir=config.RAW_DIR, url=OULAD_URL):
         with urllib.request.urlopen(url, timeout=120) as resp:
             data = resp.read()
     except OSError as e:
-        raise SystemExit(f"Download failed ({e}). Download anonymisedData.zip from "
-                         f"https://analyse.kmi.open.ac.uk/open_dataset and unzip the CSVs into {raw_dir}")
+        raise SystemExit(f"Download failed ({e}). Download the zip from {url} "
+                         f"and unzip the CSVs into {raw_dir}")
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         for member in z.namelist():
             name = os.path.basename(member)
@@ -194,11 +195,11 @@ def clean_raw(raw_dir=config.RAW_DIR, interim_dir=INTERIM_DIR):
         raise FileNotFoundError(f"Missing raw OULAD files in {raw_dir}: {missing}")
     interim_dir.mkdir(parents=True, exist_ok=True)
 
-    assessments = pd.read_csv(raw_dir / 'assessments.csv')
-    courses = pd.read_csv(raw_dir / 'courses.csv')
-    student_ass = pd.read_csv(raw_dir / 'studentAssessment.csv')
-    student_reg = pd.read_csv(raw_dir / 'studentRegistration.csv')
-    vle = pd.read_csv(raw_dir / 'vle.csv')
+    assessments = pd.read_csv(raw_dir / 'assessments.csv', na_values='?')
+    courses = pd.read_csv(raw_dir / 'courses.csv', na_values='?')
+    student_ass = pd.read_csv(raw_dir / 'studentAssessment.csv', na_values='?')
+    student_reg = pd.read_csv(raw_dir / 'studentRegistration.csv', na_values='?')
+    vle = pd.read_csv(raw_dir / 'vle.csv', na_values='?')
 
     # Assessments: missing Exam dates -> module_presentation_length
     ass = assessments.merge(courses[['code_module', 'code_presentation', 'module_presentation_length']],
@@ -218,6 +219,7 @@ def clean_raw(raw_dir=config.RAW_DIR, interim_dir=INTERIM_DIR):
              'Submission Category', 'is_banked', 'score']].copy()
     sa['id_student'] = sa['id_student'].astype(int)
 
+    # OULAD marks missing values with '?', read as NaN above.
     # Registrations: drop students with neither registration nor unregistration date,
     # missing registration date -> 0, Category = Withdrawn / Not Withdrawn
     reg = student_reg.copy()

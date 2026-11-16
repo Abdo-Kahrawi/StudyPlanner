@@ -1,0 +1,21 @@
+================================================================
+Student 0: target 55, 3 free study slots per week, planning from week 1
+  A1: TMA, weight 20, deadline end of week 4
+  A2: TMA, weight 30, deadline end of week 8
+  A3: TMA, weight 50, deadline end of week 12
+================================================================
+
+--- predictor: nn (nn), search: ucs, csp: BT
+Plan found: (3, 1, 0) (4 sessions). Predicted marks: A1: 56.1, A2: 56.2, A3: 56.7.
+Search: 22 nodes expanded, 37 generated
+CSP: called on 5 plans; NN said enough but CSP rejected 0 plan(s)
+
+Timetable
+Week  1: slot 1: A1 #1, slot 2: A1 #2, slot 3: A1 #3
+Week  2: slot 1: A2 #1
+
+CSP on plan (3, 1, 0) with and without FC / AC-3
+  mode        ok     assignments  backtracks    pruned
+  BT          True             4           0         0
+  BT+FC       True             4           0         6
+  BT+FC+AC-3  True             4           0         9

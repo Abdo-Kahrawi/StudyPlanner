@@ -1,4 +1,4 @@
-"""Shared data types: the contract between Person A and Person B.
+"""Shared data types: the contract between Abdo and Zeyad.
 
 Changing anything in this file needs a pull request approved by BOTH people.
 """

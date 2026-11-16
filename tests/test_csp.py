@@ -1,4 +1,4 @@
-"""CSP unit tests: BT, FC, AC-3 switches and counters. Owner: Person B."""
+"""CSP unit tests: BT, FC, AC-3 switches and counters. Owner: Zeyad."""
 import dataclasses
 
 import pytest

@@ -1,4 +1,4 @@
-"""Search proposes, NN checks marks, CSP checks the schedule. Owner: Person B.
+"""Search proposes, NN checks marks, CSP checks the schedule. Owner: Zeyad.
 
 Loop:
     1. search() pops a plan.
@@ -64,7 +64,7 @@ def plan_for(profile: StudentProfile, predictor: Predictor, strategy: str = "ucs
              use_fc: bool = True, use_ac3: bool = True, use_mac: bool = False,
              search_fn: Callable | None = None,
              max_sessions: int = config.MAX_SESSIONS_PER_ASSIGNMENT) -> PlannerOutput:
-    """Run the full planner for one student. search_fn defaults to search.search (Person A)."""
+    """Run the full planner for one student. search_fn defaults to search.search (Abdo)."""
     search_fn = search_fn or _default_search()
     cache: dict[Plan, ScheduleResult] = {}
     calls: list[CSPCall] = []

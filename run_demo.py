@@ -1,4 +1,4 @@
-"""Integrated demo: input, solution, and plots of how search, NN and CSP cooperate. Owner: Person B.
+"""Integrated demo: input, solution, and plots of how search, NN and CSP cooperate. Owner: Zeyad.
 
 Examples:
     python run_demo.py                                  # the worked example from the brief
@@ -24,14 +24,20 @@ from integration.planner import format_timetable, plan_for
 CSP_LABELS = {"bt": "BT", "fc": "BT+FC", "ac3": "BT+FC+AC-3"}
 
 
+# Demo student: averaged 30 on earlier assessments and has no recent online activity, so the
+# trained NN predicts marks below the target and the planner has to add sessions.
+DEMO_HISTORY = {"prev_score_mean": 30.0}
+
+
 def get_profile(name: str, real: bool):
-    if name == "example":
-        return example_profile()
-    if name == "tight":      # A1 needs 5 sessions but only 4 slots exist before its deadline
-        p = example_profile(slots_per_week=2, target=65.0)
-        return dataclasses.replace(p, assignments=(Assignment("A1", "TMA", 20.0, 2), *p.assignments[1:]))
+    if name == "example":    # the worked example from the brief: target 55, 3 slots, 3 TMAs
+        return dataclasses.replace(example_profile(), history=DEMO_HISTORY)
+    if name == "tight":      # A1 due after week 2 with 2 slots/week: the NN asks for more A1
+        p = example_profile(slots_per_week=2, target=65.0)   # sessions than the 4 slots before it
+        return dataclasses.replace(p, history=DEMO_HISTORY,
+                                   assignments=(Assignment("A1", "TMA", 20.0, 2), *p.assignments[1:]))
     if name == "impossible":
-        return example_profile(target=100.0)
+        return dataclasses.replace(example_profile(target=100.0), history=DEMO_HISTORY)
     return harness.load_profiles(max(30, int(name) + 1), config.SEED, real)[int(name)]
 
 

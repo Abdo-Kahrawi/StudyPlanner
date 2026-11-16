@@ -1,0 +1,70 @@
+================================================================
+Student 0: target 100, 3 free study slots per week, planning from week 1
+  A1: TMA, weight 20, deadline end of week 4
+  A2: TMA, weight 30, deadline end of week 8
+  A3: TMA, weight 50, deadline end of week 12
+================================================================
+
+--- predictor: nn (nn), search: ucs, csp: BT+FC+AC-3
+No solution: target unreachable at this capacity. Best predicted marks: A1: 67.4, A2: 68.9, A3: 67.9 with plan (10, 6, 4).
+Search: 1331 nodes expanded, 1330 generated
+CSP: called on 21 plans; NN said enough but CSP rejected 0 plan(s)
+
+Timetable
+Week  1: slot 1: A1 #1, slot 2: A1 #2, slot 3: A1 #3
+Week  2: slot 1: A1 #4, slot 2: A1 #5, slot 3: A1 #6
+Week  3: slot 1: A1 #7, slot 2: A1 #8, slot 3: A1 #9
+Week  4: slot 1: A1 #10, slot 2: A2 #1, slot 3: A2 #2
+Week  5: slot 1: A2 #3, slot 2: A2 #4, slot 3: A2 #5
+Week  6: slot 1: A2 #6, slot 2: A3 #1, slot 3: A3 #2
+Week  7: slot 1: A3 #3, slot 2: A3 #4
+
+Search trace (first 40 steps)
+   {'step': 1, 'plan': (0, 0, 0), 'cost': 0, 'min_margin': -52.60639953613281}
+   {'step': 2, 'plan': (1, 0, 0), 'cost': 1, 'min_margin': -50.321533203125}
+   {'step': 3, 'plan': (0, 1, 0), 'cost': 1, 'min_margin': -52.60639953613281}
+   {'step': 4, 'plan': (0, 0, 1), 'cost': 1, 'min_margin': -52.60639953613281}
+   {'step': 5, 'plan': (2, 0, 0), 'cost': 2, 'min_margin': -46.935585021972656}
+   {'step': 6, 'plan': (1, 1, 0), 'cost': 2, 'min_margin': -50.321533203125}
+   {'step': 7, 'plan': (1, 0, 1), 'cost': 2, 'min_margin': -50.321533203125}
+   {'step': 8, 'plan': (0, 2, 0), 'cost': 2, 'min_margin': -52.60639953613281}
+   {'step': 9, 'plan': (0, 1, 1), 'cost': 2, 'min_margin': -52.60639953613281}
+   {'step': 10, 'plan': (0, 0, 2), 'cost': 2, 'min_margin': -52.60639953613281}
+   {'step': 11, 'plan': (3, 0, 0), 'cost': 3, 'min_margin': -46.05577850341797}
+   {'step': 12, 'plan': (2, 1, 0), 'cost': 3, 'min_margin': -46.935585021972656}
+   {'step': 13, 'plan': (2, 0, 1), 'cost': 3, 'min_margin': -46.935585021972656}
+   {'step': 14, 'plan': (1, 2, 0), 'cost': 3, 'min_margin': -50.321533203125}
+   {'step': 15, 'plan': (1, 1, 1), 'cost': 3, 'min_margin': -50.321533203125}
+   {'step': 16, 'plan': (1, 0, 2), 'cost': 3, 'min_margin': -50.321533203125}
+   {'step': 17, 'plan': (0, 3, 0), 'cost': 3, 'min_margin': -52.60639953613281}
+   {'step': 18, 'plan': (0, 2, 1), 'cost': 3, 'min_margin': -52.60639953613281}
+   {'step': 19, 'plan': (0, 1, 2), 'cost': 3, 'min_margin': -52.60639953613281}
+   {'step': 20, 'plan': (0, 0, 3), 'cost': 3, 'min_margin': -52.60639953613281}
+   {'step': 21, 'plan': (4, 0, 0), 'cost': 4, 'min_margin': -46.05577850341797}
+   {'step': 22, 'plan': (3, 1, 0), 'cost': 4, 'min_margin': -43.937644958496094}
+   {'step': 23, 'plan': (3, 0, 1), 'cost': 4, 'min_margin': -46.05577850341797}
+   {'step': 24, 'plan': (2, 2, 0), 'cost': 4, 'min_margin': -46.935585021972656}
+   {'step': 25, 'plan': (2, 1, 1), 'cost': 4, 'min_margin': -46.935585021972656}
+   {'step': 26, 'plan': (2, 0, 2), 'cost': 4, 'min_margin': -46.935585021972656}
+   {'step': 27, 'plan': (1, 3, 0), 'cost': 4, 'min_margin': -50.321533203125}
+   {'step': 28, 'plan': (1, 2, 1), 'cost': 4, 'min_margin': -50.321533203125}
+   {'step': 29, 'plan': (1, 1, 2), 'cost': 4, 'min_margin': -50.321533203125}
+   {'step': 30, 'plan': (1, 0, 3), 'cost': 4, 'min_margin': -50.321533203125}
+   {'step': 31, 'plan': (0, 4, 0), 'cost': 4, 'min_margin': -52.60639953613281}
+   {'step': 32, 'plan': (0, 3, 1), 'cost': 4, 'min_margin': -52.60639953613281}
+   {'step': 33, 'plan': (0, 2, 2), 'cost': 4, 'min_margin': -52.60639953613281}
+   {'step': 34, 'plan': (0, 1, 3), 'cost': 4, 'min_margin': -52.60639953613281}
+   {'step': 35, 'plan': (0, 0, 4), 'cost': 4, 'min_margin': -52.60639953613281}
+   {'step': 36, 'plan': (5, 0, 0), 'cost': 5, 'min_margin': -46.05577850341797}
+   {'step': 37, 'plan': (4, 1, 0), 'cost': 5, 'min_margin': -43.770912170410156}
+   {'step': 38, 'plan': (4, 0, 1), 'cost': 5, 'min_margin': -46.05577850341797}
+   {'step': 39, 'plan': (3, 2, 0), 'cost': 5, 'min_margin': -43.937644958496094}
+   {'step': 40, 'plan': (3, 1, 1), 'cost': 5, 'min_margin': -43.937644958496094}
+
+CSP on plan (10, 6, 4) with and without FC / AC-3
+  mode        ok     assignments  backtracks    pruned
+  BT          True            20           0         0
+  BT+FC       True            20           0       190
+  BT+FC+AC-3  True            20           0       256
+
+Saved plot: /home/user/StudyPlanner/results/demo_impossible_nn.png

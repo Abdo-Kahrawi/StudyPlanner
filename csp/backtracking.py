@@ -1,4 +1,4 @@
-"""Backtracking search with optional Forward Checking and MAC. Owner: Person B.
+"""Backtracking search with optional Forward Checking and MAC. Owner: Zeyad.
 
 Variables are tried in a fixed order (assignments by deadline, sessions in order) and
 values from earliest slot to latest, so BT, BT+FC and BT+FC+AC-3 differ only in pruning.

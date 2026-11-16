@@ -1,4 +1,4 @@
-"""Profile generation tests. Owner: Person B."""
+"""Profile generation tests. Owner: Zeyad."""
 import pandas as pd
 
 from common import config

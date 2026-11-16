@@ -1,4 +1,4 @@
-"""Entry point used by integration/. Owner: Person B.
+"""Entry point used by integration/. Owner: Zeyad.
 
 Variables  : one per session, (assignment_id, k).
 Domains    : (week, slot) pairs with start_week <= week < assignment.deadline_week.
