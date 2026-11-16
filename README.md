@@ -23,6 +23,24 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Try it in the browser (for the TA)
+
+The trained weights are in the repo, so no data download and no extra packages are needed:
+
+```bash
+pip install -r requirements.txt
+python -m webapp                          # opens http://localhost:8000 (Ctrl+C to stop)
+```
+
+Pick a student on the left (worked example, tight week, impossible target, or your own
+values), choose the search, CSP solver and mark predictor, and press **Plan my study**.
+The page shows the plan, the predicted marks against the target, the week-by-week timetable,
+a what-if chart (predicted mark for 0 to 10 sessions), the three CSP solvers on the same plan,
+a side-by-side run of all searches and predictors, the search trace and the plans the NN
+accepted but the CSP rejected. Use `--port 8080` for another port, `--no-browser` to skip
+opening the browser. The server is Python's built-in `http.server` (`webapp/server.py`); the
+page is `webapp/static/`.
+
 ## Run
 
 Put the OULAD CSVs in `data/raw/` (or let step 1 download them), then from the repo root:
@@ -31,7 +49,7 @@ Put the OULAD CSVs in `data/raw/` (or let step 1 download them), then from the r
 python -m data.make_data                  # 1. raw OULAD -> data/processed/{train,test}_data.csv (seed 42)
 python -m nn.train --seed 42              # 2. train the NN (monotone in clicks), compare with baselines -> nn/weights/
 python -m eval.monotonicity --real        # 3. monotonicity check and violation report
-python run_demo.py                        # 4. integrated demo with plots (see docs/demo_script.md)
+python run_demo.py                        # 4. integrated demo with plots (saved copy in docs/demo_backup/)
 python -m eval.run_profiles --real        # 5. planner output for 30 OULAD profiles
 python -m eval.exp1_planner --real        # 6. Experiment 1: UCS vs Greedy vs A* in the planner
 python -m eval.exp2_csp --real            # 7. Experiment 2: BT vs BT+FC vs BT+FC+AC-3
@@ -41,7 +59,8 @@ python -m eval.exp1_search                #    + standalone search comparison on
 pytest -q                                 # tests
 ```
 
-Results (CSV tables and PNG plots) go to `results/`; the numbers from the real-data run are in
+Results (CSV tables and PNG plots) go to `results/`; `docs/presentation_guide.md` explains every
+slide and every web app number, split by presenter; the numbers from the real-data run are in
 `docs/results.md`. For the plain MLP used as a comparison in Experiment 3, also run
 `python -m nn.train --arch mlp --save_path nn/weights/mlp/nn_weights.pt --scaler_path nn/weights/mlp/scaler.npz --log_path nn/weights/mlp/train_log.json --comparison_path nn/weights/mlp/baseline_comparison.txt`. Without trained weights, the demo and
 experiments fall back to the stub predictor and print a note saying so.
@@ -60,6 +79,7 @@ experiments fall back to the stub predictor and print a note saying so.
 | `eval/` | B harness, A exp 1 and 3, B exp 2 | Experiments, mean and std over 5 seeds |
 | `tests/` | each owner | Unit tests + 5 normal / 3 edge / 2 impossible planner cases |
 | `run_demo.py` | B | Integrated demo |
+| `webapp/` | B | Browser interface (`python -m webapp`) |
 
 ## Team
 

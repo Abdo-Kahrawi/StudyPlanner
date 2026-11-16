@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyPlanner</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0b0505">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="#top"><img src="favicon.svg" alt="" width="28" height="28"><span>StudyPlanner</span></a>
+    <ol class="steps" aria-label="How it works">
+      <li>Search</li>
+      <li>Neural net</li>
+      <li>CSP</li>
+    </ol>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="label">Intelligent Systems project</p>
+    <h1>The fewest study sessions that reach your target.</h1>
+    <p class="lead">Search proposes a plan, a neural network predicts each mark, and a CSP places every session in a free slot before its deadline.</p>
+  </div>
+</section>
+
+<main class="wrap layout">
+  <section class="box setup" aria-labelledby="setup-h">
+    <h2 id="setup-h" class="bar c-red">Student</h2>
+
+    <div class="presets" role="radiogroup" aria-label="Start from">
+      <button class="preset" data-preset="example" role="radio"><b>Example</b><small>target 55, 3 slots</small></button>
+      <button class="preset" data-preset="tight" role="radio"><b>Tight week</b><small>2 slots, A1 due week 2</small></button>
+      <button class="preset" data-preset="impossible" role="radio"><b>Target 100</b><small>no plan exists</small></button>
+      <button class="preset" data-preset="custom" role="radio"><b>Custom</b><small>edit the values</small></button>
+    </div>
+
+    <div class="field">
+      <label for="target">Target mark <output id="target-o"></output></label>
+      <input type="range" id="target" min="0" max="100" step="1">
+    </div>
+    <div class="field">
+      <label for="slots">Free slots per week <output id="slots-o"></output></label>
+      <input type="range" id="slots" min="1" max="7" step="1">
+    </div>
+    <div class="field">
+      <label for="prev">Average of past marks <output id="prev-o"></output></label>
+      <input type="range" id="prev" min="0" max="100" step="1">
+    </div>
+    <div class="field">
+      <label for="cps">Clicks per session <output id="cps-o"></output></label>
+      <input type="range" id="cps" min="5" max="200" step="5">
+    </div>
+
+    <p class="label small">Assignments</p>
+    <div id="assignments" class="assignments"></div>
+
+    <h2 class="sub bar c-plum">Method</h2>
+    <div class="seg" data-name="strategy" role="group" aria-label="Search">
+      <span class="seg-label">Search</span>
+      <button data-v="ucs">UCS</button><button data-v="greedy">Greedy</button><button data-v="astar">A*</button>
+    </div>
+    <div class="seg" data-name="csp" role="group" aria-label="CSP">
+      <span class="seg-label">CSP</span>
+      <button data-v="bt">BT</button><button data-v="fc">BT+FC</button><button data-v="ac3">+AC-3</button>
+    </div>
+    <div class="seg" data-name="predictor" role="group" aria-label="Mark predictor">
+      <span class="seg-label">Marks</span>
+      <button data-v="nn">Neural net</button><button data-v="avg">Average</button>
+    </div>
+
+    <button id="go" class="btn primary">Plan my study</button>
+    <p class="hint">Predictions, not promises. The student decides.</p>
+  </section>
+
+  <section class="results" aria-live="polite">
+    <div id="empty" class="box empty">
+      <p class="empty-h">No plan yet</p>
+      <p>Choose a student and a method, then press <b>Plan my study</b>.</p>
+    </div>
+
+    <div id="loading" class="box empty" hidden>
+      <div class="loader" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p>Searching</p>
+    </div>
+
+    <div id="error" class="box error" hidden></div>
+
+    <div id="out" hidden>
+      <div id="banner" class="banner"></div>
+
+      <dl class="stats">
+        <div><dt>Sessions</dt><dd id="s-sessions"></dd></div>
+        <div><dt>Nodes expanded</dt><dd id="s-nodes"></dd></div>
+        <div><dt>Plans checked by CSP</dt><dd id="s-csp"></dd></div>
+        <div><dt>NN yes, CSP no</dt><dd id="s-reject"></dd></div>
+        <div><dt>Time</dt><dd id="s-time"></dd></div>
+      </dl>
+
+      <div class="grid2">
+        <div class="box">
+          <h2 class="bar c-blue">Predicted marks</h2>
+          <div id="marks"></div>
+          <p class="legend"><span><i class="sw now"></i><i class="sw a2"></i><i class="sw a3"></i>with the plan</span><span><i class="sw base"></i>with no sessions</span><span><i class="sw tgt"></i>target</span></p>
+        </div>
+        <div class="box">
+          <h2 class="bar c-green">Timetable</h2>
+          <div id="timetable" class="scroll"></div>
+          <p id="tt-note" class="legend"></p>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2 class="bar c-ochre">What if</h2>
+        <p class="section__sub">predicted mark for 0 to 10 sessions on one assignment, others at 0</p>
+        <div id="whatif" class="scroll"></div>
+        <div id="whatif-legend" class="legend"></div>
+      </div>
+
+      <div class="box tabbox">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="t-csp" role="tab">CSP solvers</button>
+          <button class="tab" data-tab="t-cmp" role="tab">Compare methods</button>
+          <button class="tab" data-tab="t-trace" role="tab">Search trace</button>
+          <button class="tab" data-tab="t-rej" role="tab">Rejected plans</button>
+        </div>
+        <div id="t-csp" class="tabpane"></div>
+        <div id="t-cmp" class="tabpane" hidden>
+          <p>Runs UCS, Greedy and A* with both predictors on this student.</p>
+          <button id="cmp-go" class="btn">Run all six</button>
+          <div id="cmp-out"></div>
+        </div>
+        <div id="t-trace" class="tabpane" hidden></div>
+        <div id="t-rej" class="tabpane" hidden></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  StudyPlanner, Intelligent Systems project. OULAD course <span id="course">BBB</span>. Search: UCS, Greedy, A*. CSP: BT, FC, AC-3.
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
